@@ -42,12 +42,13 @@
 
 .upload{
     width: 85%;
-    height: 1.7rem;
+    height: auto;
     border: 1px solid gray;
     border-radius: 0.3rem;
     /* padding: 0.2rem; */
     padding-top: 0.3rem;
     padding-left: 1rem;
+    padding: 0.4rem;
     margin-bottom: 1.5rem;
     text-align: left;
     margin-left: 1.5rem;

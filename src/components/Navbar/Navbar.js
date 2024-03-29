@@ -44,7 +44,7 @@ const Navbar = () => {
         <Link to="/signup" className='right'>Login/SignUp</Link>       
 
         {/* // theme */}
-        <p>Theme</p><img id='theme' src={Images[imageIndex]} onClick={handleTheme} alt='img'></img>  
+        <p className='theme'>Theme</p><img id='theme' src={Images[imageIndex]} onClick={handleTheme} alt='img'></img>  
       </div>
     </div>
   )
