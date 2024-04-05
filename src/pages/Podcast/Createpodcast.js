@@ -6,6 +6,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "../../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import errorIcon from '../../components/Images/error.png'
 import "./Createpodcast.css"
 
 const Contact = () => {
@@ -19,6 +20,11 @@ const Contact = () => {
   const [profileImg, setProfileImg] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const [error, setError] = useState({
+    title: false,
+    desc: false,
+    descriptionLength: false
+  })
   async function handleSubmit() {
     setLoading(true);
     console.log(title);
@@ -89,14 +95,27 @@ const Contact = () => {
             type="text"
             onChange={(e) => setTitle(e.target.value)}
             value={title}
+            onBlur={()=>{
+                setError({
+                  ...error,
+                  title: title.trim()===''
+                })
+            }}
             placeholder="Podcast title"
             required
           />
           <br></br>
+          {error.title? <p className='error'><img src={errorIcon} alt='img' /><p>Title is required</p></p> : ''}
           <textarea
             className="textarea"
             onChange={(e) => setDesc(e.target.value)}
             value={desc}
+            onBlur={()=>{
+              setError({
+                ...error,
+                desc: desc.trim()===''
+              })
+            }}
             placeholder="Podcast description"
             required
             style={{
@@ -110,6 +129,8 @@ const Contact = () => {
               background: 'color: var(--secondary-inputs)'
             }}
           ></textarea>
+          {error.desc ? <p className='error'><img src={errorIcon} alt='img' /><p>Description is required</p></p> : ''}
+          {(desc.replace(/\s/g,'').length < 40) && desc.trim()!='' ? <p className='error'><img src={errorIcon} alt='img' /><p>Description must contain minimum 40 char</p></p> : ''}
 
           <FileInput                     // input from fileInput
             accept="image/*"
@@ -124,15 +145,6 @@ const Contact = () => {
             text="Banner image upload"
             fileFun={setBannerImg}
           />
-
-          <FileInput
-            className="textarea"
-            accept="image/*"
-            id="profile-image"
-            text="profile image upload"
-            fileFun={setProfileImg}
-          />
-          
        
           <button onClick={handleSubmit} disabled={loading}>
             {loading ? "Loading..." : "Create Podcast"}

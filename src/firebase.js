@@ -4,19 +4,15 @@ import {getFirestore} from "firebase/firestore";
 import {getStorage} from "firebase/storage";
 import {getAuth} from "firebase/auth";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyANH-CJFXk6uob0lVE1V9LujLJfkM2BrcM",
-  authDomain: "podcast-app-react-c2460.firebaseapp.com",
-  projectId: "podcast-app-react-c2460",
-  storageBucket: "podcast-app-react-c2460.appspot.com",
-  messagingSenderId: "863641894768",
-  appId: "1:863641894768:web:01f5e3c23a892865ddd9b5",
-  measurementId: "G-TFB6BYE2PF"
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
 // Initialize Firebase

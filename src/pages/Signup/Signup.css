@@ -60,6 +60,20 @@
     border: 0.2rem solid gray;
 }
 
+.error{
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    margin-top: -1.8rem;
+    margin-left: 1.7rem;
+    font-size: x-small;
+    color: red;
+}
+
+.error img{
+    height: 0.7rem;
+}
+
 @media screen and (max-width: 991px) {
     .signup {
         width: 50%; /* Adjust the form width for medium screens */

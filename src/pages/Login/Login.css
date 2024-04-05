@@ -32,9 +32,23 @@
     padding-top: 2rem;
 }
 
+.error{
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    margin-top: -1.8rem;
+    margin-left: 1.7rem;
+    font-size: x-small;
+    color: red;
+}
+
+.error img{
+    height: 0.7rem;
+}
+
 @media screen and (max-width: 991px) {
     .login {
-        width: 50%; /* Adjust the form width for medium screens */
+        width: 50%; 
     }
 }
 
@@ -42,25 +56,25 @@
 
 @media screen and (max-width: 780px) {
     .login {
-        width: 80%; /* Adjust the form width for small screens */
+        width: 80%; 
     }
 
     .login input,
     .login button {
-        width: 100%; /* Make form elements full width */
+        width: 100%; 
     }
 
-    /* Additional styles specific to screens up to 780px can be added here */
+   
 }
 
 @media screen and (max-width: 480px) {
     .login {
-        width: 90%; /* Adjust the form width for extra small screens */
+        width: 90%; 
     }
 
     .login input,
     .login button {
-        width: 100%; /* Make form elements full width */
+        width: 100%; 
     }
     
        
@@ -72,5 +86,5 @@
         top: 2px;
         right: -130px;
     }
-    /* Additional styles specific to screens up to 480px can be added here */
+    
 }

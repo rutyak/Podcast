@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './FileInput.css'
 
 const FileInput = ({ accept, id, text, fileFun }) => {   // for image and audio inputs
   const [file, setFile] = useState(null);
@@ -13,7 +14,7 @@ const FileInput = ({ accept, id, text, fileFun }) => {   // for image and audio 
   return (
 
     // css when file selected then border get highlighted
-    <div className={`upload ${file ? 'active' : 'input-upload'}`}>    
+    <div className={`upload ${file ? 'active' : 'input-upload'} `}>    
 
       {/* // setting file name when selected */}
       <label htmlFor={id}>{file ? `${file}` : text}</label>   

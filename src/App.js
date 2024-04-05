@@ -4,11 +4,10 @@ import Home from './pages/Home/Home';
 import Signup from './pages/Signup/Signup';
 import Createpodcast from './pages/Podcast/Createpodcast'
 import Podcast from './pages/Podcast/Podcast';
-import Profile from './pages/Profile/Profile';
 import Login from './pages/Login/Login';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useEffect } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -23,6 +22,7 @@ import Payment from './pages/Premium/Payment';
 import PrivateRouter from './components/PrivateRouter'
 import Downloaded from './pages/Premium/Downloaded';
 import AccessPremium from './pages/Premium/AccessPremium';
+const Profile = lazy(()=> import('./pages/Profile/Profile'))
 
 function App() {
 
@@ -71,7 +71,7 @@ function App() {
           <Route path='/signup' element={<Signup />} />
           <Route path='/login' element={<Login />} /> 
           <Route element={<PrivateRouter />} >
-            <Route path='/profile' element={<Profile />} />
+            <Route path='/profile' element={<Suspense fallback={<div>Loading...</div>}><Profile/></Suspense>} />
             <Route path='/subscriber' element={<Subscriber />} />
             <Route path='/accesspremium' element={<AccessPremium />} />
             <Route path='/downloaded' element={<Downloaded />} />

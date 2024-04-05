@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,71 +8,99 @@ import { setUser } from '../../slice/userSlice';
 import "./Login.css"
 import { toast } from 'react-toastify';
 import Innernav from '../../components/Navbar/Innernav';
+import errorIcon from '../../components/Images/error.png'
 
 
 const Login = () => {
 
-   const navigate = useNavigate();
-   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-   const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
-   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-   async function handleLogin(){
-    setLoading(true);
-    try{
+  const [error, setError] = useState({
+    email: false,
+    password: false,
+  })
 
-      let userCredentials = await signInWithEmailAndPassword(    // authentication
-        auth,
-        email,
-        password
-      )
-      const user = userCredentials.user;
-      
-     
-      // getting from database
-      const userDoc = await getDoc(doc(db,"users",user.uid));
-      const userData = userDoc.data();
-      console.log("userData", userData)
+  async function handleLogin(e) {
+    e.preventDefault();
 
-      //save data in redux store, call redux store
-      dispatch(setUser({
-          name: userData.name,
-          email: user.email,
-          uid: user.uid,
-        }))
-      toast.success("Successfully login!!")
-      navigate("/podcast")
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address!");
+      return;
     }
-    catch(e){
-      console.log(e);
-      toast.error("Invalid Id or password!!")
+    setLoading(true);
+
+    try {
+      const userCredentials = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredentials.user;
+
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      const userData = userDoc.data();
+
+      dispatch(setUser({
+        name: userData.name,
+        email: user.email,
+        uid: user.uid,
+      }));
+
+      toast.success("Successfully logged in!!");
+      navigate("/podcast");
+    } catch (error) {
+      console.error(error);
+      toast.error("Invalid email or password!!");
+    } finally {
       setLoading(false);
     }
-   }
+  }
+
   return (
     <>
-    <Innernav />
-    <div className='signup'>
-        <h1>Login</h1>
-        <input
-        onChange={(e)=>setEmail(e.target.value)}
-        value={email}
-        placeholder='Enter your email'
-        required
-        ></input><br></br>
-        <input
-        onChange={(e)=>setPassword(e.target.value)}
-        value={password}
-        placeholder='Password'
-        require
-        ></input><br></br>
-        
-        {/* loading when login */}
-        <button onClick={handleLogin}>{loading ? "Loading...": "Login"}</button>   
-        <p className='para'>Don't have account?<Link to='/profile'>Signup</Link></p>
-    </div>
+      <Innernav />
+      <div className='signup'>
+        <form onSubmit={handleLogin}>
+          <h1>Login</h1>
+          <input
+            type='email'
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            placeholder='Enter your email'
+            onBlur={() => {
+              setError({
+                ...error,
+                email: email.trim() === ''
+              })
+            }
+             }
+            required
+          /><br />
+          {error.email ? <p className='error'><img src={errorIcon} alt='img' /><p>Email is required!</p></p> : ''}
+          <input
+            type='password'
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            placeholder='Password'
+            onBlur={() => {
+              setError({
+                ...error,
+                password: password.trim() === ''
+              })
+            }}
+            required
+          /><br />
+          {error.password ? <p className='error'><img src={errorIcon} alt='img' /><p>Password is required!</p></p> : ''}
+          {/* loading when login */}
+          <button type="submit" disabled={loading}>
+            {loading ? "Loading..." : "Login"}
+          </button>
+        </form>
+        <p className='para'>Don't have an account? <Link to='/signup'>Signup</Link></p>
+      </div>
+
     </>
   )
 }
