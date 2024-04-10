@@ -95,6 +95,7 @@ const CreatePodcast = () => {
             }}
           ></textarea>
           {error.desc && <p className='error'><img src={errorIcon} alt='img' /><p>Description is required</p></p>}
+          {(desc.replace(/\s/g, '').length < 40) && desc.trim()!= '' ? <p className='error'><img src={errorIcon} alt='img' /><p>Description must contain minimum 40 char</p></p> : ''}
           <FileInput
             accept="image/*"
             id="banner-image"
