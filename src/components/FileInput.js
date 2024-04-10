@@ -19,6 +19,7 @@ const FileInput = ({ accept, id, text, fileFun }) => {   // for image and audio 
       {/* // setting file name when selected */}
       <label htmlFor={id}>{file ? `${file}` : text}</label>   
       <input
+        data-testid='input-file'
         type="file"
         accept={accept}
         id={id}

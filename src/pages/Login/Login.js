@@ -49,7 +49,10 @@ const Login = () => {
       }));
 
       toast.success("Successfully logged in!!");
-      navigate("/podcast");
+      setTimeout(()=>{
+        navigate("/podcast");
+      },2000)
+     
     } catch (error) {
       console.error(error);
       toast.error("Invalid email or password!!");

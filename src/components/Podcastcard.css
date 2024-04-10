@@ -31,7 +31,7 @@ a{
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1.8rem;
+    gap: 4rem;
     flex-wrap: wrap;
 }
 
@@ -41,14 +41,14 @@ a{
 }
 
 .podcast-style input{
-    width: 64%;
+    width: 71%;
     margin: 0 auto;
     display: block;
     height: 1.7rem;
     border: 1px solid gray;
     border-radius: 0.3rem;
-    padding: 0.2rem;
+    padding: 0.3rem;
     padding-left: 1rem;
     margin-bottom: 4rem;
-    padding-left: 2rem;
+    padding-left: 1rem;
 }

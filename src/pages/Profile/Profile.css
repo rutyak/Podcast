@@ -24,15 +24,19 @@
 }
 
 .profile button {
-  background: black;
+  background: #251c1c;
   color: white;
-  width: 16%;
-  border-radius: 2rem;
-  height: 3rem;
+  width: 20%;
+  border-radius: 1rem;
+  height: 2.5rem;
   cursor: pointer;
-  margin-top: 0rem;
-  margin-left: auto; /* Center the button horizontally */
+  margin-top: 1rem;
+  margin-left: auto;
   overflow: hidden;
+}
+
+.indi-card button{
+  width: 100%
 }
 
 hr {

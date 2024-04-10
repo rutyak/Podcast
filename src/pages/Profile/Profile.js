@@ -6,64 +6,40 @@ import { signOut } from 'firebase/auth';
 import { auth, db } from '../../firebase';
 import './Profile.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import { collection, deleteDoc, doc, onSnapshot, query } from 'firebase/firestore';
+import { collection, deleteDoc, doc, onSnapshot, query, getDocs} from 'firebase/firestore';
 import { setPodcasts } from '../../slice/podcastsSlice';
 import Podcastcard from '../../components/Podcastcard';
 
 const Profile = () => {
-
-  const { id } = useParams();  // taking id
-  const dispatch = useDispatch(); //initalizing dispatch
-  const podcasts = useSelector((state) => state.podcasts.podcasts); // data from redux
-  console.log("podcastsDataprofile: ", podcasts);
-  let currentUser = auth.currentUser.uid; // current users id
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const podcasts = useSelector((state) => state.podcasts.podcasts);
+  const currentUser = auth.currentUser.uid;
   let podcastCreater = "";
   let src = "";
 
-
-  // Create a reversed copy of the podcasts array
-  const reversedPodcasts = [...podcasts].reverse(); // reverse because we need latest users details
-
-  reversedPodcasts.forEach((podcast, i) => {
-    if (i < reversedPodcasts.length - 1 && podcast.createdBy !== reversedPodcasts[i + 1].createdBy) { // checking if different creater found 
-      src = reversedPodcasts[i + 1].profileImage; // Profile image of the new user
-      console.log("profile of satyam", src);
-      podcastCreater = reversedPodcasts[i + 1].createdBy; // Creator ID
-      console.log("satyam uid", podcastCreater);
-    }
-  });
-
-
-  const navigate = useNavigate();  // initializing navigation
-  const user = useSelector((state) => state.user.user);  // user data from store
-  console.log('user', user);
-
-
-
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
-    if (id) {
-      onSnapshot(                                   // it is a listener for changes in document
-        query(collection(db, "podcasts")),          // podcast data path
-        (querySnapshot) => {                        // callback of onSnapshot
-          const podcastsData = [];                  // array for podcast data
-          querySnapshot.forEach((doc) => {
-            podcastsData.push({ id: doc.id, ...doc.data() })   // id and data
-            // console.log(doc.id, " => ", doc.data());
-          });
-          dispatch(setPodcasts(podcastsData));   // saving in redux
-        },
-        (error) => {
-          console.log("error", error);
-        }
-      );
-    }
+    const fetchData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "podcasts"));
+        const podcastsData = [];
+        querySnapshot.forEach((doc) => {
+          podcastsData.push({ id: doc.id, ...doc.data() });
+        });
+        dispatch(setPodcasts(podcastsData));
+      } catch (error) {
+        console.log("Error fetching podcasts: ", error);
+      }
+    };
 
-  }, [id, dispatch]) // execute when id load
-
+    fetchData();
+  }, [dispatch]);
 
   function handleLogout() {
-    signOut(auth)      // use for log out 
+    signOut(auth)
       .then(() => {
         toast.success('User logged out!!');
       })
@@ -73,14 +49,14 @@ const Profile = () => {
   }
 
   function handleSub() {
-    navigate("/subscriber")
+    navigate("/subscriber");
   }
 
   function handleMyPod() {
-    navigate("/podcast")
+    navigate("/podcast");
   }
 
-  async function handleDelete(podcastId) {   // delete podcast
+  async function handleDelete(podcastId) {
     try {
       await deleteDoc(doc(db, "podcasts", podcastId));
       toast.success('Podcast deleted successfully!');
@@ -88,7 +64,6 @@ const Profile = () => {
       toast.error('Error deleting podcast: ' + error.message);
     }
   }
-
 
   return (
     <div>
@@ -112,35 +87,37 @@ const Profile = () => {
               <hr />
             </div>
   
-          {/* podcast history */}
-          <div className='history'>
-            <h2>Podcast History</h2>
-            <div>
-              {podcasts.length > 0 ? (    // when podcast data vailable
-                <div className='cards'>
-                  {podcasts.map((item) => {
-                    if (item.createdBy === currentUser) {   // only showing the history of current user
-                      return (
-                        <>
-                          <Podcastcard
-                            key={item.id}
-                            title={item.title}
-                            displayImage={item.displayImage}
-                            id={item.id} />
-                          <button onClick={() => handleDelete(item.id)}>Delete podcast</button>
-                        </>
-                      )
-                    }
-                  })
-                  }
-                </div>
-              ) : (<p>Not Found</p>)
-              }
+            {/* podcast history */}
+            <div className='history'>
+              <h2>Podcast History</h2>
+              <div>
+                {podcasts.length > 0 ? (
+                  <div className='cards'>
+                    {podcasts.map((item) => {
+                      if (item.createdBy === currentUser) {
+                        return (
+                          <div className='indi-card'>
+                          <React.Fragment key={item.id}>
+                            <Podcastcard
+                              title={item.title}
+                              displayImage={item.displayImage}
+                              id={item.id}
+                            />
+                            <button onClick={() => handleDelete(item.id)}>Delete podcast</button>
+                          </React.Fragment>
+                          </div>
+                        )
+                      }
+                    })}
+                  </div>
+                ) : (
+                  <p>Not Found</p>
+                )}
+              </div>
             </div>
           </div>
-          </div>
         ) : (
-          <div>Loading...</div> // Render a loading state if user object is null or doesn't have name property
+          <div>Loading...</div>
         )}
       </div>
     </div>
